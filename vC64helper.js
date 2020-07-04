@@ -480,11 +480,6 @@ function InitWrappers() {
               .map(key => caches.delete(key))
             );
           });
-          //window.location.reload(true);
-    }
-
-    document.getElementById('button_check_for_update').onclick = function() 
-    {
           window.location.reload(true);
     }
 

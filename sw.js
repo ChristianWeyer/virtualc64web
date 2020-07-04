@@ -26,10 +26,7 @@ self.addEventListener('fetch', evt => {
       return cache_res || fetch(evt.request).then(fetch_res => {
         return caches.open(cache_name).then(cache => {
           console.log('into '+cache_name+' putting fetched resource: '+evt.request.url);
-          if(evt.request.url != 'sw.js')
-          {
-            cache.put(evt.request.url, fetch_res.clone());
-          }
+          cache.put(evt.request.url, fetch_res.clone());
           return fetch_res;
         })
       });
