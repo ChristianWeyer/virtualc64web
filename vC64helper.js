@@ -483,6 +483,10 @@ function InitWrappers() {
           window.location.reload(true);
     }
 
+    document.getElementById('button_check_for_update').onclick = function() 
+    {
+          window.location.reload(true);
+    }
 
     $('#snapshotModal').on('hidden.bs.modal', function () {
         wasm_resume_auto_snapshots();
