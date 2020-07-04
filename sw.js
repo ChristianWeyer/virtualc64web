@@ -1,4 +1,4 @@
-const cache_name = 'vc64_app_cache_v03';
+const cache_name = 'vc64_app_cache_v04';
 
 // install event
 self.addEventListener('install', evt => {
@@ -26,7 +26,10 @@ self.addEventListener('fetch', evt => {
       return cache_res || fetch(evt.request).then(fetch_res => {
         return caches.open(cache_name).then(cache => {
           console.log('into '+cache_name+' putting fetched resource: '+evt.request.url);
-          cache.put(evt.request.url, fetch_res.clone());
+          if(evt.request.url != 'sw.js')
+          {
+            cache.put(evt.request.url, fetch_res.clone());
+          }
           return fetch_res;
         })
       });
