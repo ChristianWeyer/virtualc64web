@@ -942,10 +942,15 @@ function scaleVMCanvas() {
     }
 
     function unregister_v_joystick()
-    {
-        v_joystick.destroy();
-        v_fire.destroy();
-        v_fire=null;
-        v_joystick=null;
-
+    {   
+        if(v_joystick != null)
+        {
+            v_joystick.destroy();
+            v_joystick=null;
+        }
+        if(v_fire != null)
+        {
+            v_fire.destroy();
+            v_fire=null;
+        }
     }
