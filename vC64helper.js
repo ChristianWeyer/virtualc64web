@@ -217,35 +217,42 @@ function draw_one_frame()
 
 
 function handle_touch(portnr)
-{
+{    
+    if(v_joystick == null || v_fire == null)
+        return;
+    try {
 
-    if(v_joystick.right())
-    {
-        wasm_joystick(portnr+"PULL_RIGHT");
-    }
-    else if(v_joystick.left())
-    {
-        wasm_joystick(portnr+"PULL_LEFT");
-    }
-    else
-    {
-        wasm_joystick(portnr+"RELEASE_X");
-    }
+        if(v_joystick.right())
+        {
+            wasm_joystick(portnr+"PULL_RIGHT");
+        }
+        else if(v_joystick.left())
+        {
+            wasm_joystick(portnr+"PULL_LEFT");
+        }
+        else
+        {
+            wasm_joystick(portnr+"RELEASE_X");
+        }
 
-    if(v_joystick.up())
-    {
-        wasm_joystick(portnr+"PULL_UP");
-    }
-    else if(v_joystick.down())
-    {
-        wasm_joystick(portnr+"PULL_DOWN");
-    }
-    else
-    {
-        wasm_joystick(portnr+"RELEASE_Y");
-    }
+        if(v_joystick.up())
+        {
+            wasm_joystick(portnr+"PULL_UP");
+        }
+        else if(v_joystick.down())
+        {
+            wasm_joystick(portnr+"PULL_DOWN");
+        }
+        else
+        {
+            wasm_joystick(portnr+"RELEASE_Y");
+        }
 
-    wasm_joystick(portnr + (v_fire._pressed?"PRESS_FIRE":"RELEASE_FIRE"));
+        wasm_joystick(portnr + (v_fire._pressed?"PRESS_FIRE":"RELEASE_FIRE"));
+
+    } catch (error) {
+        console.error("error while handle_touch: "+ error);        
+    }
 }
 
 function handleGamePad(portnr, gamepad)
@@ -756,7 +763,7 @@ function InitWrappers() {
         }
         document.getElementById('canvas').focus();
 
-        if(v_joystick == null && port1 == 'touch')
+        if(v_joystick == null && port2 == 'touch')
         {
             register_v_joystick();
         }
