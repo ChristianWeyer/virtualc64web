@@ -856,8 +856,8 @@ function setTheme() {
   
 
 function scaleVMCanvas() {
-        var src_width=428 -2*32;
-        var src_height=284 -2*24;
+        var src_width=428 -2*33;
+        var src_height=284 -2*22;
         var src_ratio = src_width/src_height; //1.6  kehrwert=0.625
         var inv_src_ratio = src_height/src_width;
         var wratio = window.innerWidth / window.innerHeight;
