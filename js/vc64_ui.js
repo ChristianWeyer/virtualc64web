@@ -503,13 +503,14 @@ wide_screen_switch.change( function() {
     */
     document.getElementById('button_reset').onclick = function() {
         wasm_reset();
-        document.getElementById('canvas').focus();
+        //document.getElementById('canvas').focus();
+        alert('reset');
     }
     $("#button_halt").click(function() {
         wasm_halt();
         $('#button_halt').prop('disabled', 'true');
         $('#button_run').removeAttr('disabled');
-        document.getElementById('canvas').focus();
+        //document.getElementById('canvas').focus();
     });
     $("#button_run").click(function() {
         //have to catch an intentional "unwind" exception here, which is thrown
@@ -518,7 +519,7 @@ wide_screen_switch.change( function() {
         try{wasm_run();} catch(e) {}
         $('#button_run').prop('disabled', 'true');
         $('#button_halt').removeAttr('disabled');
-        document.getElementById('canvas').focus();
+        //document.getElementById('canvas').focus();
     });
 
 
@@ -550,7 +551,7 @@ wide_screen_switch.change( function() {
         save_snapshot(app_name, snapshot_buffer.slice(0,size));
    
         $("#modal_take_snapshot").modal('hide');
-        document.getElementById('canvas').focus();
+        //document.getElementById('canvas').focus();
     });
 
     document.getElementById('button_update').onclick = function() 
@@ -755,7 +756,7 @@ wide_screen_switch.change( function() {
             port2 = 'none';
             document.getElementById('port2').value = 'none';
         }
-        document.getElementById('canvas').focus();
+        //document.getElementById('canvas').focus();
 
         if(v_joystick == null && port1 == 'touch')
         {
@@ -773,7 +774,7 @@ wide_screen_switch.change( function() {
             port1 = 'none';
             document.getElementById('port1').value = 'none';
         }
-        document.getElementById('canvas').focus();
+        //document.getElementById('canvas').focus();
 
         if(v_joystick == null && port2 == 'touch')
         {
