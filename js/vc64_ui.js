@@ -504,7 +504,7 @@ wide_screen_switch.change( function() {
     document.getElementById('button_reset').onclick = function() {
         wasm_reset();
         //document.getElementById('canvas').focus();
-        alert('reset');
+        //alert('reset');
     }
     $("#button_halt").click(function() {
         wasm_halt();
