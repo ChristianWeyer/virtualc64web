@@ -176,6 +176,7 @@ function keyup(e) {
 
 timestampjoy1 = null;
 timestampjoy2 = null;
+last_touch_cmd = null;
 /* callback for wasm mainsdl.cpp */
 function draw_one_frame()
 {
@@ -221,35 +222,42 @@ function handle_touch(portnr)
     if(v_joystick == null || v_fire == null)
         return;
     try {
-
+        var new_touch_cmd_x = "";
         if(v_joystick.right())
         {
-            wasm_joystick(portnr+"PULL_RIGHT");
+            new_touch_cmd_x = "PULL_RIGHT";
         }
         else if(v_joystick.left())
         {
-            wasm_joystick(portnr+"PULL_LEFT");
+            new_touch_cmd_x = "PULL_LEFT";
         }
         else
         {
-            wasm_joystick(portnr+"RELEASE_X");
+            new_touch_cmd_x = "RELEASE_X";
         }
 
+        var new_touch_cmd_y = "";
         if(v_joystick.up())
         {
-            wasm_joystick(portnr+"PULL_UP");
+            new_touch_cmd_y = "PULL_UP";
         }
         else if(v_joystick.down())
         {
-            wasm_joystick(portnr+"PULL_DOWN");
+            new_touch_cmd_y = "PULL_DOWN";
         }
         else
         {
-            wasm_joystick(portnr+"RELEASE_Y");
+            new_touch_cmd_y ="RELEASE_Y";
         }
-
-        wasm_joystick(portnr + (v_fire._pressed?"PRESS_FIRE":"RELEASE_FIRE"));
-
+        var new_fire = (v_fire._pressed?"PRESS_FIRE":"RELEASE_FIRE");
+        var new_touch_cmd = portnr + new_touch_cmd_x + new_touch_cmd_y + new_fire;
+        if( last_touch_cmd != new_touch_cmd)
+        {
+            last_touch_cmd = new_touch_cmd;
+            wasm_joystick(portnr+new_touch_cmd_x);
+            wasm_joystick(portnr+new_touch_cmd_y);
+            wasm_joystick(portnr+new_fire);
+        }
     } catch (error) {
         console.error("error while handle_touch: "+ error);        
     }
