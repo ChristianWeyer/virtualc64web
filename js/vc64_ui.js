@@ -370,29 +370,40 @@ function InitWrappers() {
     $('#navbar').on('shown.bs.collapse', function () { 
     });
 
-
-    menu_button_fade_out = function () {
-        setTimeout(function() {
+    burger_time_out_handle=null
+    burger_button=null;
+    menu_button_fade_in = function () {
+        if(burger_button == null)
+        {
+            burger_button = $("#button_show_menu");
+        }
+        
+        burger_button.fadeTo( "slow", 1.0 );
+        
+        if(burger_time_out_handle != null)
+        {
+            clearTimeout(burger_time_out_handle);
+        }
+        burger_time_out_handle = setTimeout(function() {
             if($("#navbar").is(":hidden"))
             {
-                $("#button_show_menu").fadeOut( "slow" );
-            }
-            else
-            { //maybe try recursivele again?
+                burger_button.fadeTo( "slow", 0.0 );
             }
         },5000);    
     };
 
     //make the menubutton not visible until a click or a touch
-    menu_button_fade_out();
+    menu_button_fade_in();
+    burger_button.hover(function(){ menu_button_fade_in();});
+
     window.addEventListener("click", function() {
-        $("#button_show_menu").fadeIn( "slow" );
-        menu_button_fade_out();
+        menu_button_fade_in();
     });
     $("#canvas").on({ 'touchstart' : function() {
-        $("#button_show_menu").fadeIn( "slow" );
-        menu_button_fade_out();
+        menu_button_fade_in();
     }});
+
+
 
 //----
     webgl_switch = $('#webgl_switch');
@@ -537,7 +548,7 @@ wide_screen_switch.change( function() {
         {
             setTimeout(function(){try{wasm_run();} catch(e) {}},200);
         }
-    })
+    });
    
     document.getElementById('button_take_snapshot').onclick = function() 
     {       
@@ -847,37 +858,112 @@ wide_screen_switch.change( function() {
     var bEnableCustomKeys = false;
     if(bEnableCustomKeys)
     {
-        //----- custom keys
-        $('#div_canvas').append('<button id="ck1" style="position:absolute;left:10%;top:10%;opacity:0.5">button</button>');
-        $('#ck1').click(function() 
-        {       
-            var c64code = translateKey("undef", "z");
-            if(c64code !== undefined)
-                wasm_key(c64code[0], c64code[1], 1);
-            setTimeout(function() {wasm_key(c64code[0], c64code[1], 0);}, 15);
+        create_new_custom_key = false;
+        $("#button_custom_key").click(
+            function(e) 
+            {  
+                create_new_custom_key = true;
+                $('#input_action_script').val('');
+ 
+                $('#modal_custom_key').modal('show');
+            }
+        );
+
+        $('#modal_custom_key').on('show.bs.modal', function () {
+            
+            if(create_new_custom_key)
+            {
+                $('#button_delete_custom_button').hide();
+            }
+            else
+            {
+                $('#button_delete_custom_button').show();
+            }
         });
 
-        $('#div_canvas').append('<button id="ck2" style="position:absolute;left:90%;top:90%;opacity:0.5">button</button>');
-        $('#ck2').click(function() 
-        {       
-            var c64code = translateKey("undef", "y");
-            if(c64code !== undefined)
-                wasm_key(c64code[0], c64code[1], 1);
-            setTimeout(function() {wasm_key(c64code[0], c64code[1], 0);}, 15);
+        $('#modal_custom_key').on('hidden.bs.modal', function () {
+            create_new_custom_key=false;
         });
+
+        $('#button_save_custom_button').click(function(e) 
+        {
+            if(create_new_custom_key)
+            {
+                //create a new custom key buttom  
+                //action_scripts[haptic_touch_selected_id] = $('#input_action_script').val();
+                
+                custom_keys.push( 
+                    {  id: custom_keys.length
+                      ,title: '😎' 
+                      ,script:  $('#input_action_script').val()
+                      ,position: "top:50%;left:50%" });        
+
+                install_custom_keys();
+                create_new_custom_key=false;
+            }
+            else
+            {
+                action_scripts[haptic_touch_selected_id] = $('#input_action_script').val();
+            }
+            $('#modal_custom_key').modal('hide');
+        });
+
+        $('#button_delete_custom_button').click(function(e) 
+        {
+            custom_keys=custom_keys.filter(el=> ('ck'+el.id) != haptic_touch_selected_id);
+            install_custom_keys();
+            $('#modal_custom_key').modal('hide');
+        });
+
+        //----- custom keys
+        custom_keys = [ 
+            { id: 0, title: 'hey', script: "z", position: "top:10%;left:10%" },            
+            { id: 1, title: 'you', script: "y", position: "top:10%;left:90%" },
+            { id: 2, title: '🙃', script: "y", position: "top:90%;left:90%" }
+        ];
+        action_scripts= {};
+
+        install_custom_keys();
         //----- 
-        install_drag();
     }
     return;
-  
 }
 
 //---- start custom keys ------
+    function install_custom_keys(){
+        //remove all existing custom key buttons
+        $(".custom_key").remove();
+        
+        //insert the new buttons
+        custom_keys.forEach(function (element, i) {
+            var btn_html='<button id="ck'+element.id+'" class="btn custom_key" style="position:absolute;'+element.position;
+            if(element.currentX)
+            {
+                btn_html += ';transform:translate3d(' + element.currentX + 'px,' + element.currentY + 'px,0)';
+               // setTranslate(currentX, currentY, $("#ck"+element.id));
+            } 
+            btn_html += ';opacity:1.0">'+element.title+'</button>';
+
+            $('#div_canvas').append(btn_html);
+            action_scripts["ck"+element.id] = element.script;
+
+
+            $('#ck'+element.id).click(function() 
+            {       
+                var c64code = translateKey("undef", action_scripts['ck'+element.id]);
+                if(c64code !== undefined)
+                    wasm_key(c64code[0], c64code[1], 1);
+                setTimeout(function() {wasm_key(c64code[0], c64code[1], 0);}, 15);
+            });
+        });
+
+        install_drag();
+    }
+
 
     function install_drag()
     {
-        dragItems = [document.querySelector("#ck1"),document.querySelector("#ck2")];
-        dragItem  = null;
+        dragItems = [];
         container = document.querySelector("#div_canvas");
 
         active = false;
@@ -888,6 +974,12 @@ wide_screen_switch.change( function() {
     
         xOffset = { };
         yOffset = { };
+
+        custom_keys.forEach(function (element, i) {
+            dragItems.push(document.querySelector("#ck"+element.id));
+            xOffset["ck"+element.id] = element.currentX;
+            yOffset["ck"+element.id] = element.currentY;
+        });
 
         container.addEventListener("touchstart", dragStart, false);
         container.addEventListener("touchend", dragEnd, false);
@@ -901,6 +993,7 @@ wide_screen_switch.change( function() {
 
     function dragStart(e) {
       if (dragItems.includes(e.target)) {  
+        //console.log('drag start:' +e.target.id);  
         dragItem = e.target;
         active = true;
         haptic_active=false;
@@ -945,6 +1038,8 @@ wide_screen_switch.change( function() {
                 )
             {
                 haptic_active=true;
+                haptic_touch_selected_id= e.target.id;
+                $('#input_action_script').val(action_scripts[e.target.id]);
                 $('#modal_custom_key').modal('show');
             }
         }
@@ -953,12 +1048,19 @@ wide_screen_switch.change( function() {
 
     function dragEnd(e) {
       if (active) {
+        //console.log('drag end:' +e.target.id);  
+ 
         if(!haptic_active)
         {
             checkForHapticTouch(e);
         }
         initialX = currentX;
         initialY = currentY;
+
+        var ckdef = custom_keys.find(el => ('ck'+el.id) == e.target.id); 
+        ckdef.currentX = currentX;
+        ckdef.currentY = currentY;
+        
         active = false;
 
       }
@@ -966,7 +1068,11 @@ wide_screen_switch.change( function() {
 
     function drag(e) {
       if (active && !haptic_active) {
-      
+ 
+        if(dragItems.includes(e.target) && e.target != dragItem)
+          return; // custom key is dragged onto other custom key, don't allow that
+ 
+       // console.log('drag:' +e.target.id);  
         e.preventDefault();
 
         if (e.type === "touchmove") {
@@ -985,6 +1091,7 @@ wide_screen_switch.change( function() {
     }
 
     function setTranslate(xPos, yPos, el) {
+     //   console.log('translate: x'+xPos+' y'+yPos+ 'el=' +el.id);  
       el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
     }
 
