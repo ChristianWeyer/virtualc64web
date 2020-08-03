@@ -856,6 +856,10 @@ wide_screen_switch.change( function() {
 
 
     var bEnableCustomKeys = false;
+    if(!bEnableCustomKeys)
+    {
+        $("#button_custom_key").remove();
+    }
     if(bEnableCustomKeys)
     {
         create_new_custom_key = false;
