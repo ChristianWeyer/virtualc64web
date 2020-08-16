@@ -54,10 +54,9 @@ function fetchOpenROMS(){
         };
         oReq.send();  
     }
-    install("roms/basic_generic.rom");
-    install("roms/kernal_generic.rom");
-    install("roms/chargen_openroms.rom");
-    install("https://github.com/sy2002/QNICE-FPGA/raw/gh-pages/public/intro.jpg");
+    install("https://dirkwhoffmann.github.io/virtualc64web/roms/basic_generic.rom");
+    install("https://dirkwhoffmann.github.io/virtualc64web/roms/kernal_generic.rom");
+    install("https://dirkwhoffmann.github.io/virtualc64web/roms/chargen_openroms.rom");
 
 }
 
