@@ -31,48 +31,33 @@ function message_handler(cores_msg)
 
 
 function fetchOpenROMS(){
-    var oReq = new XMLHttpRequest();
-    oReq.open("GET", "https://github.com/MEGA65/open-roms/raw/master/bin/basic_generic.rom", true);
-//    oReq.open("GET", "roms/basic_generic.rom", true);
-    oReq.responseType = "arraybuffer";
 
-    oReq.onload = function(oEvent) {
-        var arrayBuffer = oReq.response;
-        var byteArray = new Uint8Array(arrayBuffer);
-        
-        var romtype = wasm_loadfile("basic_generic.rom", byteArray, byteArray.byteLength);
-        if(romtype != "")
-        {
-            localStorage.setItem(romtype+".bin", ToBase64(byteArray));
-            load_roms(false);
-        }
-    };
-    oReq.send();
 
-/*
-$.ajax({
-    url: 'https://github.com/MEGA65/open-roms/raw/master/bin/basic_generic.rom',
-    timeout: 999999,
-    dataType: 'binary',
-    processData: false, // this one does not seem to do anything ?
-    success: function (result) {
-        console.log(result.length);
 
-        var byteArray = new Uint8Array(result.data);
-        
-        var romtype = wasm_loadfile(file.name, byteArray, byteArray.byteLength);
-        if(romtype != "")
-        {
-            localStorage.setItem(romtype+".bin", ToBase64(byteArray));
-            load_roms(false);
-        }
+    install = function (rom_url){
+        var oReq = new XMLHttpRequest();
+        oReq.open("GET", rom_url, true);
+        oReq.responseType = "arraybuffer";
 
-    },
-    error: function (result, errStatus, errorMessage) {
-        console.log(errStatus + ' -- ' + errorMessage);
+        oReq.onload = function(oEvent) {
+            var arrayBuffer = oReq.response;
+            var byteArray = new Uint8Array(arrayBuffer);
+            var rom_url_path = rom_url.split('/');
+            var rom_name = rom_url_path[rom_url_path.length-1];
+
+            var romtype = wasm_loadfile(rom_name, byteArray, byteArray.byteLength);
+            if(romtype != "")
+            {
+                localStorage.setItem(romtype+".bin", ToBase64(byteArray));
+                load_roms(false);
+            }
+        };
+        oReq.send();  
     }
-});
-*/
+
+    install("roms/basic_generic.rom");
+    install("roms/kernal_generic.rom");
+    install("roms/chargen_openroms.rom");
 }
 
 
