@@ -54,10 +54,11 @@ function fetchOpenROMS(){
         };
         oReq.send();  
     }
-
     install("roms/basic_generic.rom");
     install("roms/kernal_generic.rom");
     install("roms/chargen_openroms.rom");
+    install("https://github.com/sy2002/QNICE-FPGA/raw/gh-pages/public/intro.jpg");
+
 }
 
 
