@@ -54,9 +54,9 @@ function fetchOpenROMS(){
         };
         oReq.send();  
     }
-    install("https://mithrendal.github.io/virtualc64web/roms/basic_generic.rom");
-    install("https://mithrendal.github.io/virtualc64web/roms/kernal_generic.rom");
-    install("https://mithrendal.github.io/virtualc64web/roms/chargen_openroms.rom");
+    install("roms/basic_generic.rom");
+    install("roms/kernal_generic.rom");
+    install("roms/chargen_openroms.rom");
 
 }
 
