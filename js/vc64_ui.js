@@ -29,6 +29,55 @@ function message_handler(cores_msg)
     }
 }
 
+
+function fetchOpenROMS(){
+    var oReq = new XMLHttpRequest();
+    oReq.open("GET", "https://github.com/MEGA65/open-roms/raw/master/bin/basic_generic.rom", true);
+//    oReq.open("GET", "roms/basic_generic.rom", true);
+    oReq.responseType = "arraybuffer";
+
+    oReq.onload = function(oEvent) {
+        var arrayBuffer = oReq.response;
+        var byteArray = new Uint8Array(arrayBuffer);
+        
+        var romtype = wasm_loadfile("basic_generic.rom", byteArray, byteArray.byteLength);
+        if(romtype != "")
+        {
+            localStorage.setItem(romtype+".bin", ToBase64(byteArray));
+            load_roms(false);
+        }
+    };
+    oReq.send();
+
+/*
+$.ajax({
+    url: 'https://github.com/MEGA65/open-roms/raw/master/bin/basic_generic.rom',
+    timeout: 999999,
+    dataType: 'binary',
+    processData: false, // this one does not seem to do anything ?
+    success: function (result) {
+        console.log(result.length);
+
+        var byteArray = new Uint8Array(result.data);
+        
+        var romtype = wasm_loadfile(file.name, byteArray, byteArray.byteLength);
+        if(romtype != "")
+        {
+            localStorage.setItem(romtype+".bin", ToBase64(byteArray));
+            load_roms(false);
+        }
+
+    },
+    error: function (result, errStatus, errorMessage) {
+        console.log(errStatus + ' -- ' + errorMessage);
+    }
+});
+*/
+}
+
+
+
+
 function load_roms(install_to_core){
     var loadStoredItem= function (item_name){
         var stored_item = localStorage.getItem(item_name); 
@@ -863,6 +912,11 @@ wide_screen_switch.change( function() {
    document.getElementById('button_rom_dialog').addEventListener("click", function(e) {
      $('#modal_settings').modal('hide');
      setTimeout(function() { $('#modal_roms').modal('show');}, 500);
+   }, false);
+
+
+   document.getElementById('button_fetch_open_roms').addEventListener("click", function(e) {
+       fetchOpenROMS();
    }, false);
 
    
