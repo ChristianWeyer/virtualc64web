@@ -54,10 +54,10 @@ function fetchOpenROMS(){
         };
         oReq.send();  
     }
-    install("roms/basic_generic.rom");
-    install("roms/kernal_generic.rom");
-    install("roms/chargen_openroms.rom");
-
+    
+    install("https://mega65.github.io/open-roms/bin/basic_generic.rom");
+    install("https://mega65.github.io/open-roms/bin/kernal_generic.rom");
+    install("https://mega65.github.io/open-roms/bin/chargen_openroms.rom");
 }
 
 
