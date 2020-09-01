@@ -271,14 +271,18 @@ function configure_file_dialog()
 
                 $("#button_eject_zip").show();
                 $("#button_eject_zip").click(function(){
+
+                    $("#modal_file_slot").modal('hide');
+
                     last_zip_archive_name = null;
                     last_zip_archive = null;
                     
                     $("#drop_zone").html("file slot");
                     $("#drop_zone").css("border", "");
 
-                    $("#modal_file_slot").modal('hide');
-                    $("#drop_zone").click();
+                    setTimeout(function(){
+                        $("#drop_zone").click();
+                    }, 350);
                 });
 
 
