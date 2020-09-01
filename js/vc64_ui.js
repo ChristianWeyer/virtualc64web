@@ -280,9 +280,7 @@ function configure_file_dialog()
                     $("#drop_zone").html("file slot");
                     $("#drop_zone").css("border", "");
 
-                    setTimeout(function(){
-                        $("#drop_zone").click();
-                    }, 350);
+                    //$("#drop_zone").click(); this only works robust on firefox ... so better don't do it
                 });
 
 
