@@ -377,7 +377,7 @@ joystick_keyup_map = {
 }
 
 function keydown(e) {
-    if($('input').is(":focus") == false)
+    if($('input').is(":focus") == false && $('textarea').is(":focus") == false )
     {//incase any html5 input control has the focus, we should let it get the keyup 
         event.preventDefault();
     }
@@ -397,7 +397,7 @@ function keydown(e) {
 }
 
 function keyup(e) {
-    if($('input').is(":focus") == false)
+    if($('input').is(":focus") == false && $('textarea').is(":focus") == false)
     {//incase any html5 input control has the focus, we should let it get the keyup 
         event.preventDefault();
     }
@@ -1270,20 +1270,77 @@ wide_screen_switch.change( function() {
                 wasm_halt();
             }
 
-            
-            var list_actions=['Space','F1','F2','F7','F8','A','B','C'];
+            //click function
+            var on_add_action = function() {
+                var txt= $(this).text();
+
+                var action_script_val = $('#input_action_script').val();
+                if(action_script_val.trim().length==0)
+                {
+                    action_script_val = txt;
+                }
+                else if(action_script_val.trim().endsWith('{') || txt == '}')
+                {
+                    action_script_val += txt;
+                }
+                else
+                {
+                    action_script_val += ","+txt;
+                }
+
+                $('#input_action_script').val(action_script_val);
+                validate_custom_key();
+            };
+
+            $('#predefined_actions').collapse('hide');
+
+            //Special Keys action
+            var list_actions=['Space','F1','F2','F7','F8','runStop','restore','commodore', 'Delete'];
             var html_action_list='';
             list_actions.forEach(element => {
                 html_action_list +='<a class="dropdown-item" href="#">'+element+'</a>';
             });
-            
-            $('#add_action').html(html_action_list);
+            $('#add_special_key').html(html_action_list);
+            $('#add_special_key a').click(on_add_action);
 
-            $('#add_action a').click( function() {
-                var txt= $(this).text();
-                $('#input_action_script').val(/*$('#input_action_script').val()+*/txt);
+            //joystick1 action
+            var list_actions=['j1fire1','j1fire0','j1down1','j1down0','j1up1','j1up0','j1right1','j1right0','j1left1','j1left0'];
+            var html_action_list='';
+            list_actions.forEach(element => {
+                html_action_list +='<a class="dropdown-item" href="#">'+element+'</a>';
             });
+            $('#add_joystick1_action').html(html_action_list);
+            $('#add_joystick1_action a').click(on_add_action);
 
+
+            //joystick2 action
+            var list_actions=['j2fire1','j2fire0','j2down1','j2down0','j2up1','j2up0','j2right1','j2right0','j2left1','j2left0'];
+            var html_action_list='';
+            list_actions.forEach(element => {
+                html_action_list +='<a class="dropdown-item" href="#">'+element+'</a>';
+            });
+            $('#add_joystick2_action').html(html_action_list);
+            $('#add_joystick2_action a').click(on_add_action);
+
+
+
+            //timer action
+            var list_actions=['100ms','300ms','1000ms', 'loop2{','loop3{','loop6{', '}'];
+            html_action_list='';
+            list_actions.forEach(element => {
+                html_action_list +='<a class="dropdown-item" href="#">'+element+'</a>';
+            });
+            $('#add_timer_action').html(html_action_list);
+            $('#add_timer_action a').click(on_add_action);
+            
+            //system action
+            var list_actions=['pause', 'run', 'take_snapshot', 'restore_last_snapshot', 'swap_joystick', 'keyboard'];
+            html_action_list='';
+            list_actions.forEach(element => {
+                html_action_list +='<a class="dropdown-item" href="#">'+element+'</a>';
+            });
+            $('#add_system_action').html(html_action_list);
+            $('#add_system_action a').click(on_add_action);
 
         });
 
@@ -1296,8 +1353,15 @@ wide_screen_switch.change( function() {
             }
         });
 
-        $('#button_save_custom_button').click(function(e) 
+
+        $('#input_button_text').keyup( function () {validate_custom_key(); return true;} );
+        $('#input_action_script').keyup( function () {validate_custom_key(); return true;} );
+
+        $('#button_save_custom_button').click(async function(e) 
         {
+            if( (await validate_custom_key()) == false)
+                return;
+
             if(create_new_custom_key)
             {
                 //create a new custom key buttom  
@@ -1367,10 +1431,7 @@ wide_screen_switch.change( function() {
             $('#ck'+element.id).click(function() 
             {       
                 var action_script = action_scripts['ck'+element.id];
-                var c64code = translateKey(action_script, action_script.toLowerCase());
-                if(c64code !== undefined)
-                    wasm_key(c64code[0], c64code[1], 1);
-                setTimeout(function() {wasm_key(c64code[0], c64code[1], 0);}, 100);
+                setTimeout(function() { execute_cmd_seq(action_script) });
             });
         });
 
