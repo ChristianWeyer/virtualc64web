@@ -922,7 +922,7 @@ wide_screen_switch.change( function() {
 
         get_custom_buttons(global_apptitle, 
             function(the_buttons) {
-                custom_keys = the_buttons.data;
+                custom_keys = the_buttons;
                 install_custom_keys();
             }
         );
@@ -1091,7 +1091,7 @@ wide_screen_switch.change( function() {
                             global_apptitle=snapshot.title;
                             get_custom_buttons(global_apptitle, 
                                 function(the_buttons) {
-                                    custom_keys = the_buttons.data;
+                                    custom_keys = the_buttons;
                                     install_custom_keys();
                                 }
                             );
@@ -1377,6 +1377,7 @@ wide_screen_switch.change( function() {
             if(create_new_custom_key)
             {
                 $('#button_delete_custom_button').hide();
+                 $('#check_app_scope').prop('checked',true);
             }
             else
             {
@@ -1384,6 +1385,7 @@ wide_screen_switch.change( function() {
 
                 $('#input_button_text').val(btn_def.title);
                 $('#input_button_shortcut').val(btn_def.key);
+                $('#check_app_scope').prop('checked',btn_def.app_scope);
                 $('#input_action_script').val(btn_def.script);
 
                 $('#button_delete_custom_button').show();
@@ -1391,6 +1393,18 @@ wide_screen_switch.change( function() {
                 //show errors
                 validate_action_script();
             }
+
+            set_scope_label = function (){
+                $('#check_app_scope_label').html(
+                    $('#check_app_scope').prop('checked') ? 
+                    '[ currently visible only for '+global_apptitle+' ]' :
+                    '[ currently globally visible ]'
+                );
+            }
+            set_scope_label();
+            $('#check_app_scope').change( set_scope_label );
+            
+
 
             adjust_script_textbox_height();
 
@@ -1472,7 +1486,7 @@ wide_screen_switch.change( function() {
             //script action
             
             //system action
-            var list_actions=['simple while'];
+            var list_actions=['simple while', 'API example', 'aimbot'];
             html_action_list='';
             list_actions.forEach(element => {
                 html_action_list +='<a class="dropdown-item" href="#">'+element+'</a>';
@@ -1485,8 +1499,17 @@ wide_screen_switch.change( function() {
                     var action_script_val = $('#input_action_script').val();
                     if(action_script_val.trim().length==0)
                     {
-                        action_script_val = 'js: \nwhile(not_stopped(this_id))\n{\n await action("A=>200ms")\n}';
+                        if(txt=='simple while')                
+                            action_script_val = 'js: \nwhile(not_stopped(this_id))\n{\n await action("A=>200ms")\n}';
+                        else if(txt=='API example')
+                            action_script_val = 'js://example of the API\nwhile(not_stopped(this_id))\n{\n  //wait some time\n  await action("100ms");\n\n  //get information about the sprites 0..7\n  var y_light=sprite_ypos(0);\n  var y_dark=sprite_ypos(0);\n\n  //reserve exclusive port 1..2 access (manual joystick control is blocked)\n  set_port_owner(1,PORT_ACCESSOR.BOT);\n  await action(`j1left1=>j1up1=>400ms=>j1left0=>j1up0`);\n  //give control back to the user\n  set_port_owner(1,PORT_ACCESSOR.MANUAL);\n}';
+                        else if(txt=='aimbot')
+                            action_script_val = 'js://archon aimbot\nconst port_light=1, port_dark=2, sprite_light=0, sprite_dark=1;\n\nwhile(not_stopped(this_id))\n{\n  await aim_and_shoot( port_light /* change bot side here ;-) */ );\n  await action("100ms");\n}\n\nasync function aim_and_shoot(port)\n{ \n  var y_light=sprite_ypos(sprite_light);\n  var y_dark=sprite_ypos(sprite_dark);\n  var x_light=sprite_xpos(sprite_light);\n  var x_dark=sprite_xpos(sprite_dark);\n\n  var y_diff=Math.abs(y_light - y_dark);\n  var x_diff=Math.abs(x_light - x_dark);\n  var angle = shoot_angle(x_diff,y_diff);\n\n  var x_aim=null;\n  var y_aim=null;\n  if( y_diff<10 || 26<angle && angle<28 )\n  {\n     var x_rel = (port == port_dark) ? x_dark-x_light: x_light-x_dark;  \n     x_aim=x_rel > 0 ?"left":"right";   \n  }\n  if( x_diff <10 || 26<angle && angle<28)\n  {\n     var y_rel = (port == port_dark) ? y_dark-y_light: y_light-y_dark;  \n     y_aim=y_rel > 0 ?"up":"down";   \n  }\n  \n  if(x_aim != null || y_aim != null)\n  {\n    set_port_owner(port, \n      PORT_ACCESSOR.BOT);\n    await action(`j${port}left0=>j${port}up0`);\n\n    await action(`j${port}fire1`);\n    if(x_aim != null)\n     await action(`j${port}${x_aim}1`);\n    if(y_aim != null)\n      await action(`j${port}${y_aim}1`);\n    await action("60ms");\n    if(x_aim != null)\n      await action(`j${port}${x_aim}0`);\n    if(y_aim != null)\n      await action(`j${port}${y_aim}0`);\n    await action(`j${port}fire0`);\n    await action("60ms");\n\n    set_port_owner(\n      port,\n      PORT_ACCESSOR.MANUAL\n    );\n    await action("500ms");\n  }\n}\n\nfunction shoot_angle(x, y) {\n  return Math.atan2(y, x) * 180 / Math.PI;\n}';
                        adjust_script_textbox_height();
+                    }
+                    else
+                    {
+                        alert('first empty manually the existing script code then try again to insert '+txt+' template')
                     }
 
                     $('#input_action_script').val(action_script_val);
@@ -1522,19 +1545,20 @@ wide_screen_switch.change( function() {
                     {  id: custom_keys.length
                       ,title: $('#input_button_text').val()
                       ,key: $('#input_button_shortcut').val()
+                      ,app_scope: $('#check_app_scope').prop('checked')
                       ,script:  $('#input_action_script').val()
-                      ,position: "top:50%;left:50%" });        
+                      ,position: "top:50%;left:50%" });
 
                 install_custom_keys();
                 create_new_custom_key=false;
             }
             else
             {
-                 var btn_def = custom_keys.find(el=> ('ck'+el.id) == haptic_touch_selected.id);
-                 btn_def.title = $('#input_button_text').val();
-                 btn_def.key = $('#input_button_shortcut').val();
-                 btn_def.script = $('#input_action_script').val();
-                 
+                var btn_def = custom_keys.find(el=> ('ck'+el.id) == haptic_touch_selected.id);
+                btn_def.title = $('#input_button_text').val();
+                btn_def.key = $('#input_button_shortcut').val();
+                btn_def.app_scope = $('#check_app_scope').prop('checked');
+                btn_def.script = $('#input_action_script').val();
 
                 install_custom_keys();
             }
@@ -1555,7 +1579,7 @@ wide_screen_switch.change( function() {
 
         get_custom_buttons(global_apptitle, 
             function(the_buttons) {
-                custom_keys = the_buttons.data;
+                custom_keys = the_buttons;
                 install_custom_keys();
             }
         );
@@ -1578,12 +1602,16 @@ wide_screen_switch.change( function() {
         //insert the new buttons
         custom_keys.forEach(function (element, i) {
             element.id = i;
-            var btn_html='<button id="ck'+element.id+'" class="btn btn-secondary custom_key" style="position:absolute;'+element.position;
+            var btn_html='<button id="ck'+element.id+'" class="btn btn-secondary custom_key" style="position:absolute;'+element.position+';';
             if(element.currentX)
             {
-                btn_html += ';transform:translate3d(' + element.currentX + 'px,' + element.currentY + 'px,0)';
+                btn_html += 'transform:translate3d(' + element.currentX + 'px,' + element.currentY + 'px,0);';
             } 
-            btn_html += ';touch-action:none">'+element.title+'</button>';
+            if(element.app_scope==false)
+            {
+                btn_html += 'border-width:4px;border-color: #99999999;';
+            }
+            btn_html += 'touch-action:none">'+element.title+'</button>';
 
             $('#div_canvas').append(btn_html);
             action_scripts["ck"+element.id] = element.script;
