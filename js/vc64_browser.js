@@ -273,6 +273,7 @@ var collectors = {
         },
         run: function (app_title, id){
             //alert(`run ${app_title} with ${id}`);
+            wasm_reset();
 
             var csdb_url = 'https://csdb.dk/release/?id='+id;
 
@@ -284,10 +285,11 @@ var collectors = {
                 //alert(download_url);
 
                 fetch(download_url).then( async response => {
-                    wasm_reset();
-                    file_slot_file_name = response.url.match(".*/(.*)$")[1];
-                    file_slot_file = new Uint8Array( await response.arrayBuffer());                    
-                    configure_file_dialog();
+                    setTimeout(async () => {
+                        file_slot_file_name = response.url.match(".*/(.*)$")[1];
+                        file_slot_file = new Uint8Array( await response.arrayBuffer());                    
+                        configure_file_dialog();
+                    }, 300);
                 });
 
 /* DOM Parser does not work ... maybe HTML of csdb is broken ...
