@@ -975,7 +975,7 @@ wide_screen_switch.change( function() {
                 emit_string(['Enter','r','u','n','Enter']);
             }
             
-        }, 900);
+        }, 1400);
 
 
       
