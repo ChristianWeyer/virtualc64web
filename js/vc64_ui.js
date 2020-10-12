@@ -921,6 +921,8 @@ wide_screen_switch.change( function() {
 
         $('#modal_file_slot').modal('hide');
 
+        $('#alert_reset').show();
+
         setTimeout(() => {
             var filetype = wasm_loadfile(file_slot_file_name, file_slot_file, file_slot_file.byteLength);
 
@@ -974,15 +976,12 @@ wide_screen_switch.change( function() {
             {
                 emit_string(['Enter','r','u','n','Enter']);
             }
-            
-        }, 1800);
-
-
+            $('#alert_reset').hide();
+        }, 2600);
       
     }
     );
-
-
+    
 
     $('#modal_take_snapshot').on('hidden.bs.modal', function () {
         if(is_running())
