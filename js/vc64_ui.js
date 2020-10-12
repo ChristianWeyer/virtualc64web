@@ -214,6 +214,9 @@ function pushFile(file) {
 
 function configure_file_dialog(mount_button_delay=0)
 {
+    if(mount_button_delay>0)
+        reset_before_load=true;
+
     try{
         if($("#modal_roms").is(":visible"))
         {
@@ -236,7 +239,7 @@ function configure_file_dialog(mount_button_delay=0)
             $("#div_zip_content").hide();
             $("#button_eject_zip").hide();
             
-            $("#button_insert_file").hide();
+  //          $("#button_insert_file").hide();
 
             if(file_slot_file_name.match(/[.](prg|t64)$/i)) 
             {
@@ -347,9 +350,6 @@ function configure_file_dialog(mount_button_delay=0)
                 $("#button_insert_file").attr("disabled", true);
             }
             $("#modal_file_slot").modal();
-            setTimeout(() => {
-                $("#button_insert_file").show();
-            }, mount_button_delay);
         }    
 
     } catch(e) {
@@ -909,59 +909,75 @@ wide_screen_switch.change( function() {
             return;
         }
 
-        var filetype = wasm_loadfile(file_slot_file_name, file_slot_file, file_slot_file.byteLength);
-
-        //if it is a disk from a multi disk zip file, apptitle should be the name of the zip file only
-        //instead of disk1, disk2, etc....
-        if(last_zip_archive_name !== null)
+        if(reset_before_load==true)
         {
-            global_apptitle = last_zip_archive_name;
+            wasm_reset();
         }
-        else
-        {
-            global_apptitle = file_slot_file_name;
-        }
+        reset_before_load=false;
+        
+        do_auto_load = $("#auto_load").is(":visible") && $("#auto_load").prop('checked')
+        do_auto_run = $("#auto_run").is(":visible") && $("#auto_run").prop('checked');
+        do_auto_press_play=$("#auto_press_play").is(":visible") && $("#auto_press_play").prop('checked');
 
-        get_custom_buttons(global_apptitle, 
-            function(the_buttons) {
-                custom_keys = the_buttons;
-                install_custom_keys();
-            }
-        );
         $('#modal_file_slot').modal('hide');
 
-        if($("#auto_load").is(":visible") && $("#auto_load").prop('checked'))
-        {
-            if(file_slot_file_name.endsWith('.tap'))
-            {
-                //shift + runStop
-                emit_string(['Enter','ShiftRunStop']);
-                
-                if($("#auto_press_play").is(":visible") && $("#auto_press_play").prop('checked'))
-                {
-                    //press play on tape shortly after emitting load command
-                    setTimeout(function() {wasm_press_play(); },420);
-                }
+        setTimeout(() => {
+            var filetype = wasm_loadfile(file_slot_file_name, file_slot_file, file_slot_file.byteLength);
 
-                if($("#auto_run").is(":visible") && $("#auto_run").prop('checked'))
-                {
-                    emit_string(['Enter','r','u','n','Enter'], 3000, 800);
-                }
+            //if it is a disk from a multi disk zip file, apptitle should be the name of the zip file only
+            //instead of disk1, disk2, etc....
+            if(last_zip_archive_name !== null)
+            {
+                global_apptitle = last_zip_archive_name;
             }
             else
             {
-                emit_string(['Enter','l','o','a', 'd','"','*','"',',','8',',', '1', 'Enter']);
-                
-                if($("#auto_run").is(":visible") && $("#auto_run").prop('checked'))
+                global_apptitle = file_slot_file_name;
+            }
+
+            get_custom_buttons(global_apptitle, 
+                function(the_buttons) {
+                    custom_keys = the_buttons;
+                    install_custom_keys();
+                }
+            );
+
+            if(do_auto_load)
+            {
+                if(file_slot_file_name.endsWith('.tap'))
                 {
-                    emit_string(['Enter','r','u','n','Enter'], 3000, 800);
+                    //shift + runStop
+                    emit_string(['Enter','ShiftRunStop']);
+                    
+                    if(do_auto_press_play)
+                    {
+                        //press play on tape shortly after emitting load command
+                        setTimeout(function() {wasm_press_play(); },420);
+                    }
+
+                    if(do_auto_run)
+                    {
+                        emit_string(['Enter','r','u','n','Enter'], 3000, 800);
+                    }
+                }
+                else
+                {
+                    emit_string(['Enter','l','o','a', 'd','"','*','"',',','8',',', '1', 'Enter']);
+                    
+                    if(do_auto_run)
+                    {
+                        emit_string(['Enter','r','u','n','Enter'], 3000, 800);
+                    }
                 }
             }
-        }
-        else if($("#auto_run").is(":visible") && $("#auto_run").prop('checked'))
-        {
-            emit_string(['Enter','r','u','n','Enter']);
-        }
+            else if(do_auto_run)
+            {
+                emit_string(['Enter','r','u','n','Enter']);
+            }
+            
+        }, 900);
+
+
       
     }
     );
