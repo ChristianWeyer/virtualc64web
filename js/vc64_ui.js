@@ -212,7 +212,7 @@ function pushFile(file) {
     fileReader.readAsArrayBuffer(file);
 }
 
-function configure_file_dialog()
+function configure_file_dialog(mount_button_delay=0)
 {
     try{
         if($("#modal_roms").is(":visible"))
@@ -235,6 +235,8 @@ function configure_file_dialog()
             $("#button_insert_file").removeAttr("disabled");
             $("#div_zip_content").hide();
             $("#button_eject_zip").hide();
+            
+            $("#button_insert_file").hide();
 
             if(file_slot_file_name.match(/[.](prg|t64)$/i)) 
             {
@@ -285,9 +287,6 @@ function configure_file_dialog()
 
                     //$("#drop_zone").click(); this only works robust on firefox ... so better don't do it
                 });
-
-
-
 
                 var zip = new JSZip();
                 zip.loadAsync(file_slot_file).then(function (zip) {
@@ -348,6 +347,9 @@ function configure_file_dialog()
                 $("#button_insert_file").attr("disabled", true);
             }
             $("#modal_file_slot").modal();
+            setTimeout(() => {
+                $("#button_insert_file").show();
+            }, mount_button_delay);
         }    
 
     } catch(e) {

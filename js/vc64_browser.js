@@ -285,11 +285,9 @@ var collectors = {
                 //alert(download_url);
 
                 fetch(download_url).then( async response => {
-                    setTimeout(async () => {
-                        file_slot_file_name = response.url.match(".*/(.*)$")[1];
-                        file_slot_file = new Uint8Array( await response.arrayBuffer());                    
-                        configure_file_dialog();
-                    }, 300);
+                    file_slot_file_name = response.url.match(".*/(.*)$")[1];
+                    file_slot_file = new Uint8Array( await response.arrayBuffer());                    
+                    configure_file_dialog(mount_button_delay=1000);
                 });
 
 /* DOM Parser does not work ... maybe HTML of csdb is broken ...
