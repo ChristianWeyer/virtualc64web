@@ -284,8 +284,9 @@ var collectors = {
                 //alert(download_url);
 
                 fetch(download_url).then( async response => {
+                    wasm_reset();
                     file_slot_file_name = response.url.match(".*/(.*)$")[1];
-                    file_slot_file = new Uint8Array( await response.arrayBuffer());
+                    file_slot_file = new Uint8Array( await response.arrayBuffer());                    
                     configure_file_dialog();
                 });
 
