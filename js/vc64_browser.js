@@ -93,7 +93,7 @@ function load_browser(datasource_name)
             {
                 delete_btn.onclick = function() {
                     let id = this.id.match(/delete_snap_(.*)/)[1];
-                    alert('delete id='+id);
+                    //alert('delete id='+id);
                     delete_snapshot_per_id(id);
                     $("#card_snap_"+id).remove();
                 };
