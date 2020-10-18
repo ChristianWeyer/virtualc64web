@@ -21,6 +21,12 @@ function setup_browser_interface()
     }
 
 
+    $('#snapshotModal').on('shown.bs.modal', function () {
+        var view_detail=$("#view_detail");
+        if(view_detail.is(":visible")) 
+            view_detail.focus();
+    });
+
 
     $('#snapshotModal').on('hidden.bs.modal', function () {
         wasm_resume_auto_snapshots();
@@ -33,11 +39,6 @@ function setup_browser_interface()
     document.getElementById('button_snapshots').onclick = function() 
     {
         load_browser(current_browser_datasource);
-    
-        setTimeout(() => {
-            var view_detail=$("#view_detail");
-            if(view_detail.is(":visible")) view_detail.focus();
-        }, 500);    
     }
 }
 
@@ -340,7 +341,7 @@ var collectors = {
 
             this.row_name='top one file demos';
             await fetch(top_one_file_demo_csdb_url).then( webservice_loader );
-          
+/*          
             this.row_name='top demos';
             await fetch(top_demo_csdb_url).then( webservice_loader );
             
@@ -364,7 +365,7 @@ var collectors = {
 
             this.row_name='top games';
             await fetch("https://csdb.dk/webservice/?type=chart&ctype=release&subtype=11").then( webservice_loader );
-
+*/
         },
         draw_item_into_canvas: function (app_title, teaser_canvas, item){
             var ctx = teaser_canvas.getContext('2d');
