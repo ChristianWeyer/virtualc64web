@@ -6,6 +6,7 @@ function setup_browser_interface()
     document.getElementById('sel_browser_snapshots').onclick = async function(){
         while(get_data_collector('csdb').busy)
         {
+            console.log('collector is busy ...');
             await sleep(250);
         }
 
@@ -20,6 +21,7 @@ function setup_browser_interface()
     document.getElementById('sel_browser_csdb').onclick = async function(){
         while(get_data_collector('snapshots').busy)
         {
+            console.log('collector is busy ...');
             await sleep(250);
         }
 
@@ -338,8 +340,8 @@ var collectors = {
                             new_item.name = property("Name");
                             new_item.type = property("Type");
                             new_item.date = new Date(
-                                property("ReleaseYear")+'-'+
-                                property("ReleaseMonth")+'-'+
+                                property("ReleaseYear"),
+                                property("ReleaseMonth")-1,  //month is 0 indexed
                                 property("ReleaseDay")
                             ).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
                         
@@ -391,6 +393,7 @@ var collectors = {
 
                 this.row_name='top games';
                 await fetch("https://csdb.dk/webservice/?type=chart&ctype=release&subtype=11").then( webservice_loader );
+
             }
             finally
             {
