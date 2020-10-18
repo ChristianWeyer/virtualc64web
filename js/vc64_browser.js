@@ -25,8 +25,15 @@ function setup_browser_interface()
         hide_all_tooltips();
 
         var view_detail=$("#view_detail");
-        if(view_detail.is(":visible")) 
+        if(view_detail.is(":visible"))
+        {
             view_detail.focus();
+            $("#snapshotModal").css('overflow-y', 'hidden');
+        }
+        else
+        {
+            $("#snapshotModal").css('overflow-y', 'auto');
+        }
     });
 
 
@@ -385,9 +392,11 @@ var collectors = {
         run: function (app_title, id){
             $("#view_detail").show().focus();
             hide_all_tooltips();
+            $("#snapshotModal").css('overflow-y', 'hidden');
 
             $("#detail_back").click(function(){
                 $("#view_detail").hide();
+                $('#snapshotModal').focus().css('overflow-y', 'auto');
             });
 
             var item = this.all_items[id];
@@ -433,7 +442,7 @@ var collectors = {
                 if(event.key === "Escape")
                 {
                     $("#view_detail").hide();
-                    $('#snapshotModal').focus();
+                    $('#snapshotModal').focus().css('overflow-y', 'auto');
                 }
                 return false;
             }
