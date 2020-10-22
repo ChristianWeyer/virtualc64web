@@ -499,8 +499,9 @@ var collectors = {
             link_id=0;
             for(var link of item.links)
             {
-                $(`#detail_run${link_id}`).click(function (){ 
-                    already_loaded_collector.run_link(app_title, id, link);
+                $(`#detail_run${link_id}`).click(function (){
+                    var clicked_link_id=this.id.match("detail_run(.*)")[1];
+                    already_loaded_collector.run_link(app_title, id, item.links[clicked_link_id]);
                 });
                 link_id++;
             }
