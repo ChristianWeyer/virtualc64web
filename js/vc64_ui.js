@@ -941,7 +941,7 @@ wide_screen_switch.change( function() {
     {   
         if($('#div_zip_content').is(':visible'))
         {
-            configure_file_dialog();
+            configure_file_dialog(reset_before_load);
             return;
         }
         
