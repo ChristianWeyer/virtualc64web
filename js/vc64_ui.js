@@ -1083,7 +1083,7 @@ wide_screen_switch.change( function() {
         }
         else
         {
-            var time_reset_to_ready_prompt = faster_open_roms_installed ? 300:2600;
+            var time_reset_to_ready_prompt = faster_open_roms_installed ? 600:2600;
             
             $('#alert_reset').show();
             wasm_reset();
