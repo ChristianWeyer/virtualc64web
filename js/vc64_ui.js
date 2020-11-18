@@ -240,7 +240,7 @@ async function drop_handler(ev) {
                                 "<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
                                 <a href="https://csdb.dk/release/download.php?id=244060">http://csdb.dk/getinternalfile.php/205910/joyride.prg</a>"
                 */
-                var dropped_id_and_name = dropped_html.match(`id=([0-9]+)">(http://csdb.dk/getinternalfile.php/.*?)</a>`); 
+                var dropped_id_and_name = dropped_html.match(`id=([0-9]+)">(https?://csdb.dk/getinternalfile.php/.*?)</a>`); 
                 if(dropped_id_and_name != null && dropped_id_and_name.length>1)
                 {
                     var id = dropped_id_and_name[1];
