@@ -50,8 +50,8 @@ const uint8_t ROMFile::magicKernalRomBytes[kernalRomSignatureCnt][3] = {
     { 0x20, 0x70, 0xA8 },       // MEGA65 project
     { 0x20, 0x02, 0xBE },
     { 0x4C, 0xB2, 0xA6 },        // MEGA65 2020.08.15
-    { 0xA9, 0x01, 0x2C }        // MEGA65 2020.09.24
-
+    { 0xA9, 0x01, 0x2C },        // MEGA65 2020.09.24
+    { 0x20, 0x2E, 0xba }
 };
 
 const uint8_t ROMFile::magicVC1541RomBytes[vc1541RomSignatureCnt][3] = {

@@ -203,6 +203,7 @@ unsigned int executed_frame_count=0;
 int64_t total_executed_frame_count=0;
 double start_time=emscripten_get_now();
 unsigned int rendered_frame_count=0;
+unsigned int frames=0, seconds=0;
 // The emscripten "main loop" replacement function.
 void draw_one_frame_into_SDL(void *thisC64) 
 {
@@ -254,7 +255,12 @@ void draw_one_frame_into_SDL(void *thisC64)
   { 
     double passed_time= now - last_time;
     last_time = now;
-    printf("time[ms]=%lf, audio_samples=%d, frames [executed=%u, rendered=%u]\n", passed_time, sum_samples, executed_frame_count, rendered_frame_count);
+
+    seconds += 1; 
+    frames += rendered_frame_count;
+    printf("time[ms]=%lf, audio_samples=%d, frames [executed=%u, rendered=%u] v3_avg_fps=%u\n", 
+    passed_time, sum_samples, executed_frame_count, rendered_frame_count, frames/seconds);
+
     sum_samples=0;
     rendered_frame_count=0;
     executed_frame_count=0;
