@@ -1071,6 +1071,15 @@ function InitWrappers() {
             window.parent.postMessage({ msg: 'render_current_audio_state', 
                 value: audio_context == null ? 'suspended' : audio_context.state },"*");
         }
+        else if(event.data == "open_zip()")
+        {
+            if(required_roms_loaded && last_zip_archive_name != null)
+            {
+                file_slot_file_name = last_zip_archive_name;
+                file_slot_file = last_zip_archive;
+                configure_file_dialog();
+            }
+        }
     }); 
     
     dark_switch = document.getElementById('dark_switch');
