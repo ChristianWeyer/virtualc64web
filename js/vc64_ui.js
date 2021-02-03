@@ -50,6 +50,7 @@ function get_parameter_link()
                 else if(token.match(/touch=true/i))
                 {
                     call_param_touch=true;
+                    register_v_joystick();
                 }
                 else if(token.match(/port1=true/i))
                 {
