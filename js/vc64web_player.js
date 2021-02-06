@@ -72,8 +72,8 @@ var vc64web_player={
         //turn picture into iframe
         var emuview_html = `
 <div id="player_container" style="display:flex;flex-direction:column;">
-<iframe id="vc64web" width="100%" height="100%" onclick="event.preventDefault();$vc64web.focus();return false;"
-    src="${vc64web_url}${params}#${address}">
+<iframe id="vc64web" width="100%" height="100%" src="${vc64web_url}${params}#${address}"
+>
 </iframe>
 <div style="display: flex"><svg  class="player_icon_btn" onclick="vc64web_player.stop_emu_view();return false;" xmlns="http://www.w3.org/2000/svg" width="2.0em" height="2.0em" fill="currentColor" class="bi bi-pause-btn" viewBox="0 0 16 16">
     <path d="M6.5 5A1.5 1.5 0 0 0 5 6.5v3A1.5 1.5 0 0 0 6.5 11h3A1.5 1.5 0 0 0 11 9.5v-3A1.5 1.5 0 0 0 9.5 5h-3z"/>
@@ -118,18 +118,18 @@ ${this.overlay_on_icon}
             $vc64web.height($vc64web.width() * 200/320); 
         });
 
+        setTimeout(()=>{
+            document.activeElement.blur();
+            vc64web.focus();
+        }, 900);
+
+        $('body').click(function(){
+            document.activeElement.blur();
+            vc64web.focus();
+        });
+
         this.state_poller = setInterval(function(){ 
             let vc64web=document.getElementById("vc64web");
-            if( document.activeElement == vc64web)
-            {//this if is only needed for safari, when it goes into overlay
-                document.activeElement.blur();
-                vc64web.focus();
-            }
-            if(document.activeElement.nodeName.toLowerCase() == 'body')
-            { 
-                vc64web.focus();
-            }
-
             vc64web.contentWindow.postMessage("poll_state", "*");
         }, 900);
 
@@ -165,6 +165,11 @@ ${this.overlay_on_icon}
             this.is_overlay=true;
         }
         $vc64web.height($vc64web.width() * 200/320);
+        
+        let vc64web=document.getElementById("vc64web");
+        //the blur and refocus is only needed for safari, when it goes into overlay
+        document.activeElement.blur(); 
+        vc64web.focus();
     },
     scale_overlay: function(){
         var ratio=1.6;
