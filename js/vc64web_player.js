@@ -120,12 +120,12 @@ ${this.overlay_on_icon}
 
         setTimeout(()=>{
             document.activeElement.blur();
-            vc64web.focus();
+            document.getElementById("vc64web").focus();
         }, 900);
 
         $('body').click(function(){
             document.activeElement.blur();
-            vc64web.focus();
+            document.getElementById("vc64web").focus();
         });
 
         this.state_poller = setInterval(function(){ 
