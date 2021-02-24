@@ -1903,6 +1903,7 @@ $('.layer').change( function(event) {
                 validate_action_script();
 
                 reconfig_editor(new_lang);
+                editor.focus();
             });
 
             if(create_new_custom_key)
