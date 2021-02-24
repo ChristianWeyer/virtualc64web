@@ -655,7 +655,7 @@ joystick_keyup_map = {
 
 function is_any_text_input_active()
 {
-    if(editor !== undefined && editor.hasFocus())
+    if(typeof editor !== 'undefined' && editor.hasFocus())
         return true;
 
     var active = false;
