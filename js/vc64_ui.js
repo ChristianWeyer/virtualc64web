@@ -2121,7 +2121,8 @@ $('.layer').change( function(event) {
                         editor.setOption("theme", "vc64dark");
                     }
                     reconfig_editor($("#button_script_language").text());
-                    $(".CodeMirror").css("width","100%").css("min-height","70px");
+                    $(".CodeMirror").css("width","100%").css("min-height","60px");
+                    editor.setSize("100%", 'auto');
 
                     $("#button_script_add, #button_script_language").each(function(){
                         $(this).prop('disabled', false).
