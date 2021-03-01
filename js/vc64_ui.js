@@ -2046,10 +2046,10 @@ $('.layer').change( function(event) {
                         {
                             action_script_val = 
 `let orig_color = wasm_peek(0xD020);
-for(let i=0;i<15;i++)
+for(let i=0;not_stopped(this_id);i++)
 {
-    wasm_poke( 0xD020, i);
-    await action("200ms");
+	wasm_poke( 0xD020, i%15);
+	await action("200ms");
 }
 wasm_poke(0xD020, orig_color);`;
                         }
@@ -2102,25 +2102,23 @@ wasm_poke(0xD020, orig_color);`;
                         extraKeys: {"Ctrl-Space": "autocomplete"}
                     });
 
-
+                    let check_livecomplete=$('#check_livecomplete'); 
                     editor.on("keydown",function( cm, event ) {
                         if(event.key === "Escape")
                         {//prevent that ESC closes the complete modal when in editor
                             event.stopPropagation();
                             return false;
                         }
-                    });
-
-                    editor.on("keyup", function (cm, event) {                        
-                        if($('#button_script_language').text() == "javascript"
-                        && $('#check_livecomplete').prop('checked')
-                        )
+                        if (!cm.state.completionActive && 
+                            event.key.length == 1  &&
+                            event.metaKey == false && event.ctrlKey == false &&
+                            event.key != ';' && event.key != ' ' && event.key != '(' 
+                            && event.key != ')' && 
+                            event.key != '{' && event.key != '}'
+                            ) 
                         {
-                            if (!cm.state.completionActive && 
-                                event.key.length == 1  &&
-                                event.key != ';' && event.key != ' ' && event.key != '(' 
-                                &&event.key != ')' && event.key != '{' && event.key != '}'  
-                                ) 
+                            if(check_livecomplete.is(":visible") && 
+                               check_livecomplete.prop('checked'))
                             {
                                 cm.showHint({completeSingle: false});
                             }
