@@ -2010,7 +2010,7 @@ $('.layer').change( function(event) {
                 validate_action_script();
             }
 
-            if(btn_def.transient)
+            if(btn_def !== undefined && btn_def.transient !== undefined && btn_def.transient)
             {
                 $('#check_app_scope_label').html(
                     '[ transient button from preconfig, globally visible ]'
