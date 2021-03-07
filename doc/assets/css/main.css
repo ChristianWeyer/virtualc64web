@@ -3057,7 +3057,7 @@ input, select, textarea {
 				display: block;
 				height: 44px;
 				left: 0;
-				position: fixed;
+				position: absolute; /*fixed;*/
 				top: 0;
 				width: 100%;
 				z-index: 10001;
