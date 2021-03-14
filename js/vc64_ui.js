@@ -2382,18 +2382,18 @@ wasm_poke(0xD020, orig_color);`;
                 return;
             }
 
-            var btn_html='<button id="ck'+element.id+'" class="btn btn-secondary custom_key" style="position:absolute;'+element.position+';';
+            var btn_html='<button id="ck'+element.id+'" class="btn btn-secondary btn-sm custom_key" style="position:absolute;'+element.position+';';
             if(element.currentX)
             {
                 btn_html += 'transform:translate3d(' + element.currentX + 'px,' + element.currentY + 'px,0);';
             } 
             if(element.transient)
             {
-                btn_html += 'border-width:4px;border-color: rgb(100, 133, 188);'; //cornflowerblue=#6495ED
+                btn_html += 'border-width:2px;border-color: rgb(100, 133, 188);'; //cornflowerblue=#6495ED
             }
             else if(element.app_scope==false)
             {
-                btn_html += 'border-width:4px;border-color: #99999999;';
+                btn_html += 'border-width:2px;border-color: #99999999;';
             }
 
 
