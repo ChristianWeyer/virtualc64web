@@ -2389,11 +2389,11 @@ wasm_poke(0xD020, orig_color);`;
             } 
             if(element.transient)
             {
-                btn_html += 'border-width:2px;border-color: rgb(100, 133, 188);'; //cornflowerblue=#6495ED
+                btn_html += 'border-width:3px;border-color: rgb(100, 133, 188);'; //cornflowerblue=#6495ED
             }
             else if(element.app_scope==false)
             {
-                btn_html += 'border-width:2px;border-color: #99999999;';
+                btn_html += 'border-width:3px;border-color: #99999999;';
             }
 
 
