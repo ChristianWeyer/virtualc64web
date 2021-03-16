@@ -185,7 +185,7 @@ ${this.overlay_on_icon}
         var margin_top  = Math.round((100 -  height_percent )/2);
         if(margin_top<5)
         {//give some extra room for height of player bottom bar controls 
-            width_percent -= 4.6; 
+            width_percent -= 4.8; 
         }
         var margin_left = (100-width_percent)/2;
 
