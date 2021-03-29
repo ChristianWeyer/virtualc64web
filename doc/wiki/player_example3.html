@@ -1,0 +1,66 @@
+<html>
+<head>
+
+<script src="https://dirkwhoffmann.github.io/virtualc64web/js/vc64web_player.js"></script>
+
+<style>
+	body {
+            background-color: black;
+	    color: white;
+	}	
+        #player_container {
+            background-color: black;
+        }
+        #vc64web {
+            border:none;
+        }
+        .player_icon_btn {
+            background-color: transparent;
+            color: white;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        .btn_play {
+            color: #2575ff;
+            cursor: pointer;
+        }
+</style>
+
+<script>
+async function load_file()
+{
+    const response = await fetch("https://dirkwhoffmann.github.io/virtualc64web/doc/media/wolfling14.prg");
+//    const response = await fetch("../media/wolfling14.prg");
+
+    document.getElementById("vc64web").contentWindow.postMessage(
+        {
+            cmd: "load", 
+            file: new Uint8Array( await response.arrayBuffer()),
+            file_name: "wolfling.prg"
+        }, "*"
+    );
+
+}
+</script>
+
+
+</head>
+
+<body>
+<div>
+<img 
+style="width:60vw" src="../images/wolfling.gif" 
+ontouchstart="touched=true"
+onclick="let touch=(typeof touched!='undefined')?touched:false;touched=false;let config={touch:touch,openROMS:true,navbar:false,wide:true,border:0.3,port2:true}; vc64web_player.load(this,encodeURIComponent(JSON.stringify(config)));return false;"		
+/>
+</div>
+<br>
+example of embedding virtual c64 web with the external vc64web_player.js and touchscreen detection
+<br>
+<br>
+
+<button onclick="load_file();">load</button>
+
+
+</body>
+</html>
