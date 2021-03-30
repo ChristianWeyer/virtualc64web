@@ -5,7 +5,7 @@
 
  var vc64web_player={
     listens: false,
-    loadScript: function (url, callback){
+    loadScript: async function (url, callback){
         var script = document.createElement("script")
         script.type = "text/javascript";
         script.onload = callback;
@@ -13,7 +13,7 @@
         document.getElementsByTagName("head")[0].appendChild(script);
     },
     samesite_file: null,
-    inject_samesite_app_into_iframe: function (){
+    inject_samesite_app_into_iframe: async function (){
         let ssfile = this.samesite_file;
         this.samesite_file= null;
         const response = await fetch(ssfile.url);
@@ -25,7 +25,7 @@
             }, "*"
         );
     },
-    load: function(element, params, address) {
+    load: async function(element, params, address) {
         if(address === undefined)
         {
             address = params;
