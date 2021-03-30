@@ -12,6 +12,19 @@
         script.src = url;
         document.getElementsByTagName("head")[0].appendChild(script);
     },
+    samesite_file: null,
+    inject_samesite_app_into_iframe: function (){
+        let ssfile = this.samesite_file;
+        this.samesite_file= null;
+        const response = await fetch(ssfile.url);
+        document.getElementById("vc64web").contentWindow.postMessage(
+            {
+                cmd: "load", 
+                file: new Uint8Array( await response.arrayBuffer()),
+                file_name: ssfile.name
+            }, "*"
+        );
+    },
     load: function(element, params, address) {
         if(address === undefined)
         {
@@ -24,6 +37,10 @@
                 if(event.data.msg == "render_run_state")
                 {
                     this.render_run_state(event.data.value);
+                    if(event.data.value == true && this.samesite_file != null)
+                    {
+                        this.inject_samesite_app_into_iframe();
+                    }
                 }
                 else if(event.data.msg == "render_current_audio_state")
                 {
