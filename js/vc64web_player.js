@@ -27,6 +27,19 @@
                 }, "*"
             );
         }
+        else if(ssfile.base64 !== undefined)
+        {
+            function FromBase64(str) {
+                return atob(str).split('').map(function (c) { return c.charCodeAt(0); });
+            }
+            vc64web_window.postMessage(
+                {
+                    cmd: "load", 
+                    file: Uint8Array.from(FromBase64(ssfile.base64)),
+                    file_name: ssfile.name
+                }, "*"
+            );
+        }
         else if(ssfile.url !== undefined)
         {
             const response = await fetch(ssfile.url);
@@ -39,6 +52,7 @@
             );
         }
         $("#btn_open_in_extra_tab").hide();
+        $("#btn_overlay").css("margin-right", "0px");
     },
     load: async function(element, params, address) {
         if(address === undefined)
