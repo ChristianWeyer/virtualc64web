@@ -26,24 +26,6 @@
         }
 </style>
 
-<script>
-async function load_file()
-{
-    const response = await fetch("https://dirkwhoffmann.github.io/virtualc64web/doc/media/wolfling14.prg");
-//    const response = await fetch("../media/wolfling14.prg");
-
-    document.getElementById("vc64web").contentWindow.postMessage(
-        {
-            cmd: "load", 
-            file: new Uint8Array( await response.arrayBuffer()),
-            file_name: "wolfling.prg"
-        }, "*"
-    );
-
-}
-</script>
-
-
 </head>
 
 <body>
@@ -58,9 +40,6 @@ onclick="let touch=(typeof touched!='undefined')?touched:false;touched=false;let
 example of embedding virtual c64 web with the external vc64web_player.js and touchscreen detection
 <br>
 <br>
-
-<button onclick="load_file();">load</button>
-
 
 </body>
 </html>
