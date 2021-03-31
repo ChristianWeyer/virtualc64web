@@ -16,14 +16,29 @@
     inject_samesite_app_into_iframe: async function (){
         let ssfile = this.samesite_file;
         this.samesite_file= null;
-        const response = await fetch(ssfile.url);
-        document.getElementById("vc64web").contentWindow.postMessage(
-            {
-                cmd: "load", 
-                file: new Uint8Array( await response.arrayBuffer()),
-                file_name: ssfile.name
-            }, "*"
-        );
+        let vc64web_window = document.getElementById("vc64web").contentWindow;
+        if(ssfile.bin !== undefined)
+        {
+            vc64web_window.postMessage(
+                {
+                    cmd: "load", 
+                    file: ssfile.bin,
+                    file_name: ssfile.name
+                }, "*"
+            );
+        }
+        else if(ssfile.url !== undefined)
+        {
+            const response = await fetch(ssfile.url);
+            vc64web_window.postMessage(
+                {
+                    cmd: "load", 
+                    file: new Uint8Array( await response.arrayBuffer()),
+                    file_name: ssfile.name
+                }, "*"
+            );
+        }
+        $("#btn_open_in_extra_tab").hide();
     },
     load: async function(element, params, address) {
         if(address === undefined)
