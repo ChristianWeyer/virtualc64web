@@ -91,7 +91,7 @@ function setup_browser_interface()
             //and now look into snapshots
             if(snapshot_collector.total_count==0)
             { 
-                $('#sel_browser_csdb').click();   
+                document.getElementById('sel_browser_csdb').click();   
             }
         }   
     }
@@ -335,12 +335,11 @@ var collectors = {
                         var app_title=app_titles[t];
                         if(search_term == '' || app_title.toLowerCase().indexOf(search_term.toLowerCase()) >= 0)
                         {
-                            let app_snaps = await get_snapshots_for_app_title_promised(app_title);
+                            let app_snaps = await get_snapshots_for_app_title(app_title);
                             get_data_collector('snapshots').total_count+=app_snaps.length;
                             row_renderer(latest_load_query_context, app_title, app_snaps);
                         }
                     }
-                    //das false flaggen ist hier zu früh, weil er noch die Daten holt und dann rendered
                     get_data_collector('snapshots').set_busy(false);
                 }
                 await get_stored_app_titles(store_renderer);

@@ -102,20 +102,7 @@ function get_stored_app_titles(callback_fn)
     };
 }
 
-function get_snapshots_for_app_title(context, app_title, callback_fn)
-{
-    let transaction = db.transaction("snapshots"); 
-    let snapshots = transaction.objectStore("snapshots");
-    let titleIndex = snapshots.index("title");
-
-    let request = titleIndex.getAll(app_title);
-
-    request.onsuccess = function() {
-        callback_fn(context, app_title, request.result);
-    };
-}
-
-function get_snapshots_for_app_title_promised(app_title)
+function get_snapshots_for_app_title(app_title)
 {
     return new Promise((resolve, reject) => {
       let transaction = db.transaction("snapshots"); 
