@@ -323,20 +323,21 @@ var collectors = {
                     new_item.internal_id=z;
                     auto_save_items.push(new_item);
                 }
+                
                 row_renderer(latest_load_query_context,'auto_save',auto_save_items);
-
                 this.total_count=auto_save_count;
 
                 //now the user snapshots
-                var store_renderer = function(app_titles)
+                var store_renderer = async function(app_titles)
                 {
-                    get_data_collector('snapshots').total_count+=app_titles.length;
                     for(var t=0; t<app_titles.length;t++)
                     {
                         var app_title=app_titles[t];
                         if(search_term == '' || app_title.toLowerCase().indexOf(search_term.toLowerCase()) >= 0)
                         {
-                            get_snapshots_for_app_title(latest_load_query_context, app_title, row_renderer);
+                            let app_snaps = await get_snapshots_for_app_title_promised(app_title);
+                            get_data_collector('snapshots').total_count+=app_snaps.length;
+                            row_renderer(latest_load_query_context, app_title, app_snaps);
                         }
                     }
                     //das false flaggen ist hier zu früh, weil er noch die Daten holt und dann rendered
