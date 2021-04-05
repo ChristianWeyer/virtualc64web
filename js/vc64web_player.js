@@ -32,23 +32,34 @@
             function FromBase64(str) {
                 return atob(str).split('').map(function (c) { return c.charCodeAt(0); });
             }
-            vc64web_window.postMessage(
-                {
+            let file_descriptor={
                     cmd: "load", 
                     file: Uint8Array.from(FromBase64(ssfile.base64)),
                     file_name: ssfile.name
-                }, "*"
+            }
+            if(ssile.floppy_rom !== undefined)
+            {
+                file_descriptor.floppy_rom = new Uint8Array.from(FromBase64(ssfile.floppy_rom));
+            }
+            vc64web_window.postMessage(
+                file_descriptor, "*"
             );
         }
         else if(ssfile.url !== undefined)
         {
             const response = await fetch(ssfile.url);
-            vc64web_window.postMessage(
-                {
+            let file_descriptor={
                     cmd: "load", 
-                    file: new Uint8Array( await response.arrayBuffer()),
+                    file: new Uint8Array(await response.arrayBuffer()),
                     file_name: ssfile.name
-                }, "*"
+            }; 
+            if(ssile.floppy_rom !== undefined)
+            {
+                let floppy_response = await fetch(ssfile.floppy_rom);
+                file_descriptor.floppy_rom = new Uint8Array(await floppy_response.arrayBuffer());
+            }
+            vc64web_window.postMessage(
+                file_descriptor, "*"
             );
         }
         $("#btn_open_in_extra_tab").hide();

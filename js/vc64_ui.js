@@ -1205,8 +1205,15 @@ function InitWrappers() {
         }
         else if(event.data.cmd == "load")
         {
+            //check if any roms should be preloaded first... 
+            if(event.data.floppy_rom !== undefined)
+            {
+                var byteArray = event.data.floppy_rom;
+                var romtype = wasm_loadfile("1541.rom", byteArray, byteArray.byteLength);
+            }
+            
             file_slot_file_name = event.data.file_name;
-            file_slot_file = event.data.file;//new Uint8Array( await response.arrayBuffer());
+            file_slot_file = event.data.file;
             //if there is still a zip file in the fileslot, eject it now
             $("#button_eject_zip").click();
             configure_file_dialog(reset=false);

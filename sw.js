@@ -1,4 +1,4 @@
-const cache_name = 'vc64_app_cache_v2021_04_04';
+const cache_name = 'vc64_app_cache_v2021_04_05';
 
 // install event
 self.addEventListener('install', evt => {
