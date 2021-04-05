@@ -39,7 +39,7 @@
             }
             if(ssfile.floppy_rom !== undefined)
             {
-                file_descriptor.floppy_rom = new Uint8Array.from(FromBase64(ssfile.floppy_rom));
+                file_descriptor.floppy_rom = Uint8Array.from(FromBase64(ssfile.floppy_rom));
             }
             vc64web_window.postMessage(
                 file_descriptor, "*"
