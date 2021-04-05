@@ -37,7 +37,7 @@
                     file: Uint8Array.from(FromBase64(ssfile.base64)),
                     file_name: ssfile.name
             }
-            if(ssile.floppy_rom !== undefined)
+            if(ssfile.floppy_rom !== undefined)
             {
                 file_descriptor.floppy_rom = new Uint8Array.from(FromBase64(ssfile.floppy_rom));
             }
@@ -53,7 +53,7 @@
                     file: new Uint8Array(await response.arrayBuffer()),
                     file_name: ssfile.name
             }; 
-            if(ssile.floppy_rom !== undefined)
+            if(ssfile.floppy_rom !== undefined)
             {
                 let floppy_response = await fetch(ssfile.floppy_rom);
                 file_descriptor.floppy_rom = new Uint8Array(await floppy_response.arrayBuffer());
